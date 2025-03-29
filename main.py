@@ -13,7 +13,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
-from webdriver_manager.core.utils import ChromeType
+from webdriver_manager.utils import os_name  # Add this import for OS-specific cache handling
 
 import openai
 import requests
@@ -41,7 +41,11 @@ try:
     print("1⃣ Launching driver...")
     try:
         driver = webdriver.Chrome(
-            service=Service(ChromeDriverManager().install()),
+            service=Service(ChromeDriverManager(
+                version=DRIVER_VERSION,  # Specify the fixed driver version
+                cache_valid_range=7,  # Optional: Cache driver for 7 days
+                path=os.path.join(os.getcwd(), ".wdm")  # Cache directory in the project folder
+            ).install()),
             options=options
         )
         print("✅ Headless Chrome launched")
