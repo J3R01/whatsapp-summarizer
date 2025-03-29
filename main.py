@@ -13,6 +13,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.utils import ChromeType
 
 import openai
 import requests
@@ -40,7 +41,7 @@ try:
     print("1⃣ Launching driver...")
     try:
         driver = webdriver.Chrome(
-            service=Service(ChromeDriverManager(driver_version=DRIVER_VERSION).install()),
+            service=Service(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()),
             options=options
         )
         print("✅ Headless Chrome launched")
