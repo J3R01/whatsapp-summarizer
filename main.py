@@ -13,10 +13,10 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
-from webdriver_manager.utils import os_name  # Add this import for OS-specific cache handling
 
 import openai
 import requests
+from pyvirtualdisplay import Display  # Add this import
 
 CHAT_NAME = "Tech Stocks"
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -37,14 +37,25 @@ options.add_argument("--headless=new")
 options.add_argument("--no-sandbox")
 options.add_argument("--disable-dev-shm-usage")
 
+# Start a virtual display before launching the driver
+try:
+    print("🖥️ Starting virtual display...")
+    display = Display(visible=0, size=(1920, 1080))    pip install pyvirtualdisplay
+    display.start()
+    print("✅ Virtual display started")
+except Exception as e:
+    print("❌ Failed to start virtual display")
+    traceback.print_exc()
+    notify_error("starting virtual display", e)
+    raise
+
 try:
     print("1⃣ Launching driver...")
     try:
         driver = webdriver.Chrome(
             service=Service(ChromeDriverManager(
                 version=DRIVER_VERSION,  # Specify the fixed driver version
-                cache_valid_range=7,  # Optional: Cache driver for 7 days
-                path=os.path.join(os.getcwd(), ".wdm")  # Cache directory in the project folder
+                path=".wdm"  # Cache directory in the project folder
             ).install()),
             options=options
         )
@@ -202,6 +213,16 @@ try:
     except Exception as e:
         notify_error("sending to Discord", e)
         raise
+
+# Stop the virtual display after the script finishes
+finally:
+    try:
+        print("🛑 Stopping virtual display...")
+        display.stop()
+        print("✅ Virtual display stopped")
+    except Exception as e:
+        print("❌ Failed to stop virtual display")
+        traceback.print_exc()
 
 except Exception:
     try:
