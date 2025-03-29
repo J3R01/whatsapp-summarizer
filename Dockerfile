@@ -20,3 +20,9 @@ COPY . /app
 
 # Run the application
 CMD ["python", "main.py"]
+
+# entry.sh (for Railway)
+if [ ! -d ".wdm" ]; then
+  echo "Creating .wdm directory"
+  mkdir .wdm
+fi
