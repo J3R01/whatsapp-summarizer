@@ -1,28 +1,33 @@
-FROM python:3.9-slim
+# Use a base image
+FROM python:3.11-slim
 
-# Install Chromium and dependencies
+# Install necessary dependencies
 RUN apt-get update && apt-get install -y \
-    chromium \
-    chromium-driver \
-    && rm -rf /var/lib/apt/lists/*
+    wget \
+    curl \
+    unzip \
+    libx11-dev \
+    libxkbfile-dev \
+    libsecret-1-dev \
+    libnss3 \
+    libgdk-pixbuf2.0-0 \
+    libxss1 \
+    libasound2
 
-# Set environment variables for Chromium
-ENV CHROME_BIN=/usr/bin/chromium
-ENV CHROMEDRIVER_BIN=/usr/bin/chromedriver
+# Ensure .wdm directory exists (run shell command inside RUN instruction)
+RUN if [ ! -d "/app/.wdm" ]; then \
+        echo "Creating .wdm directory"; \
+        mkdir /app/.wdm; \
+    fi
 
-# Install Python dependencies
-COPY requirements.txt /app/requirements.txt
+# Set the working directory
 WORKDIR /app
+
+# Copy the necessary files
+COPY . /app/
+
+# Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application code
-COPY . /app
-
-# Run the application
-CMD ["python", "main.py"]
-
-# entry.sh (for Railway)
-if [ ! -d ".wdm" ]; then
-  echo "Creating .wdm directory"
-  mkdir .wdm
-fi
+# Run the entry point script
+ENTRYPOINT ["bash", "entry.sh"]
