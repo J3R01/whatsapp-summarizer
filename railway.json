@@ -1,0 +1,9 @@
+{
+    "build": {
+      "env": {
+        "OPENAI_API_KEY": "here",
+        "DISCORD_WEBHOOK_URL": "here"
+      }
+    }
+  }
+  
