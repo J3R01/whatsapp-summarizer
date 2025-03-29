@@ -14,6 +14,9 @@ RUN apt-get update && apt-get install -y \
     libxss1 \
     libasound2
 
+# Install Xvfb for pyvirtualdisplay
+RUN apt-get update && apt-get install -y xvfb
+
 # Ensure the /app directory exists, then create .wdm inside it
 RUN mkdir -p /app && if [ ! -d "/app/.wdm" ]; then \
         echo "Creating .wdm directory"; \
