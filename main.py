@@ -33,7 +33,7 @@ options.add_argument("--disable-dev-shm-usage")
 try:
     print("1️⃣ Launching driver...")
     try:
-        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+        driver = webdriver.Chrome( service=Service(ChromeDriverManager(driver_version="134.0.6340.0").install()),options=options)
         print("✅ Headless Chrome launched")
     except Exception as e:
         print("❌ Chrome failed to launch")
