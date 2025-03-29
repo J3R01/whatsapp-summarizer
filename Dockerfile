@@ -1,39 +1,22 @@
-FROM python:3.11-slim
+FROM python:3.9-slim
 
-# Install system dependencies
+# Install Chromium and dependencies
 RUN apt-get update && apt-get install -y \
-    xvfb \
     chromium \
     chromium-driver \
-    fonts-liberation \
-    libappindicator3-1 \
-    libasound2 \
-    libatk-bridge2.0-0 \
-    libatk1.0-0 \
-    libcups2 \
-    libdbus-1-3 \
-    libgdk-pixbuf2.0-0 \
-    libnspr4 \
-    libnss3 \
-    libx11-xcb1 \
-    libxcomposite1 \
-    libxdamage1 \
-    libxrandr2 \
-    xdg-utils \
-    wget \
-    curl \
-    unzip
+    && rm -rf /var/lib/apt/lists/*
 
-# Set env to prevent chromium sandbox errors
+# Set environment variables for Chromium
 ENV CHROME_BIN=/usr/bin/chromium
-ENV PATH="$PATH:/usr/bin"
-
-# Set working dir
-WORKDIR /app
-COPY . .
+ENV CHROMEDRIVER_BIN=/usr/bin/chromedriver
 
 # Install Python dependencies
+COPY requirements.txt /app/requirements.txt
+WORKDIR /app
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Run script using entry.sh
-CMD ["bash", "entry.sh"]
+# Copy application code
+COPY . /app
+
+# Run the application
+CMD ["python", "main.py"]

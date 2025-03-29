@@ -1,4 +1,4 @@
-selenium==4.17.2
+selenium
+webdriver-manager>=3.8.5
 openai
 requests
-webdriver-manager
