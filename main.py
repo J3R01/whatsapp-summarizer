@@ -37,10 +37,19 @@ options.add_argument("--no-sandbox")
 options.add_argument("--disable-dev-shm-usage")
 
 try:
-    print("1️⃣ Launching driver...")
+    print("1⃣ Launching driver...")
     try:
+        from webdriver_manager.core.utils import get_browser_version_from_os
+        from webdriver_manager.utils import ChromeType
+        from webdriver_manager.chrome import ChromeDriverManager
+        from webdriver_manager.core.driver_cache import DriverCache
+
+        class FixedChromeDriverManager(ChromeDriverManager):
+            def __init__(self, version):
+                super().__init__(version=version, cache_manager=DriverCache())
+
         driver = webdriver.Chrome(
-            service=Service(ChromeDriverManager(version=DRIVER_VERSION).install()),
+            service=Service(FixedChromeDriverManager(version=DRIVER_VERSION).install()),
             options=options
         )
         print("✅ Headless Chrome launched")
@@ -50,7 +59,7 @@ try:
         notify_error("launching Chrome", e)
         raise
 
-    print("2️⃣ Driver launched, loading WhatsApp...")
+    print("2⃣ Driver launched, loading WhatsApp...")
 
     try:
         driver.get("https://web.whatsapp.com")
@@ -58,14 +67,14 @@ try:
         time.sleep(5)
 
         if os.path.exists("cookies.pkl"):
-            print("3️⃣ Found cookies.pkl, loading cookies...")
+            print("3⃣ Found cookies.pkl, loading cookies...")
             with open("cookies.pkl", "rb") as f:
                 cookies = pickle.load(f)
                 for cookie in cookies:
                     driver.add_cookie(cookie)
             driver.refresh()
             time.sleep(15)
-            print("4️⃣ Cookies loaded and page refreshed")
+            print("4⃣ Cookies loaded and page refreshed")
         else:
             print("❌ No cookies.pkl found, exiting after manual QR scan")
             time.sleep(60)
@@ -79,7 +88,7 @@ try:
         raise
 
     try:
-        print("5️⃣ Searching for chat box...")
+        print("5⃣ Searching for chat box...")
         search_box = None
         for _ in range(20):
             try:
@@ -96,7 +105,7 @@ try:
             chat = driver.find_element(By.XPATH, f'//span[@title="{CHAT_NAME}"]')
             chat.click()
             time.sleep(3)
-            print("6️⃣ Chat opened")
+            print("6⃣ Chat opened")
         else:
             print("❌ Search box not found")
 
@@ -118,11 +127,11 @@ try:
             end_dt = yday.replace(hour=23, minute=59, second=59, microsecond=0)
             title = "📈 Daily Summary for Tech Stocks (Yesterday):"
 
-        print(f"7️⃣ Start: {start_dt}")
-        print(f"8️⃣ End: {end_dt}")
+        print(f"7⃣ Start: {start_dt}")
+        print(f"8⃣ End: {end_dt}")
 
         messages = driver.find_elements(By.XPATH, '//div[contains(@class, "message-in") or contains(@class, "message-out")]')
-        print(f"9️⃣ Found {len(messages)} raw message elements")
+        print(f"9⃣ Found {len(messages)} raw message elements")
 
         collected = []
 
@@ -158,7 +167,7 @@ try:
 
     try:
         driver.quit()
-        print("🛑 Driver session ending.")
+        print("🛍️ Driver session ending.")
     except:
         pass
 
