@@ -39,17 +39,8 @@ options.add_argument("--disable-dev-shm-usage")
 try:
     print("1⃣ Launching driver...")
     try:
-        from webdriver_manager.core.utils import get_browser_version_from_os
-        from webdriver_manager.utils import ChromeType
-        from webdriver_manager.chrome import ChromeDriverManager
-        from webdriver_manager.core.driver_cache import DriverCache
-
-        class FixedChromeDriverManager(ChromeDriverManager):
-            def __init__(self, version):
-                super().__init__(version=version, cache_manager=DriverCache())
-
         driver = webdriver.Chrome(
-            service=Service(FixedChromeDriverManager(version=DRIVER_VERSION).install()),
+            service=Service(ChromeDriverManager(driver_version=DRIVER_VERSION).install()),
             options=options
         )
         print("✅ Headless Chrome launched")
