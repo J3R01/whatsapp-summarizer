@@ -1,5 +1,5 @@
 # -----------------------------
-# main.py (Railway-compatible headless-only using Selenium)
+# main.py (Railway-compatible headless-only using Selenium with fixed driver version)
 # -----------------------------
 
 import os
@@ -13,7 +13,6 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
-from webdriver_manager.core.utils import ChromeType
 
 import openai
 import requests
@@ -21,6 +20,8 @@ import requests
 CHAT_NAME = "Tech Stocks"
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 DISCORD_WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL")
+
+DRIVER_VERSION = "114.0.5735.90"
 
 def notify_error(stage, err):
     requests.post(DISCORD_WEBHOOK_URL, json={
@@ -39,7 +40,7 @@ try:
     print("1️⃣ Launching driver...")
     try:
         driver = webdriver.Chrome(
-            service=Service(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()),
+            service=Service(ChromeDriverManager(version=DRIVER_VERSION).install()),
             options=options
         )
         print("✅ Headless Chrome launched")
