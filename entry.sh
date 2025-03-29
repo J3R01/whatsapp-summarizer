@@ -1,4 +1,8 @@
 #!/bin/bash
-Xvfb :99 &  # virtual display
+
 echo "Starting bot..."
-python3 main.py
+
+Xvfb :99 -screen 0 1024x768x24 &
+export DISPLAY=:99
+
+python main.py
