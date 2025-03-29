@@ -40,7 +40,7 @@ options.add_argument("--disable-dev-shm-usage")
 # Start a virtual display before launching the driver
 try:
     print("🖥️ Starting virtual display...")
-    display = Display(visible=0, size=(1920, 1080))    pip install pyvirtualdisplay
+    display = Display(visible=0, size=(1920, 1080))  # Corrected this line
     display.start()
     print("✅ Virtual display started")
 except Exception as e:
