@@ -1,3 +1,7 @@
+# -----------------------------
+# main.py (Railway-compatible headless-only using Selenium)
+# -----------------------------
+
 import os
 import time
 import pickle
@@ -9,6 +13,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.core.utils import ChromeType
 
 import openai
 import requests
@@ -33,7 +38,10 @@ options.add_argument("--disable-dev-shm-usage")
 try:
     print("1️⃣ Launching driver...")
     try:
-        driver = webdriver.Chrome( service=Service(ChromeDriverManager(driver_version="134.0.6340.0").install()),options=options)
+        driver = webdriver.Chrome(
+            service=Service(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()),
+            options=options
+        )
         print("✅ Headless Chrome launched")
     except Exception as e:
         print("❌ Chrome failed to launch")
